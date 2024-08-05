@@ -11,6 +11,7 @@ import (
 type MySQLStorage struct {
 	db *sql.DB
 }
+
 //Constructor
 func NewMySQLStorage(cfg mysql.Config) *MySQLStorage {
 	db, err := sql.Open("mysql", cfg.FormatDSN())
@@ -27,6 +28,7 @@ func NewMySQLStorage(cfg mysql.Config) *MySQLStorage {
 
 	return &MySQLStorage{db: db}
 }
+
 //Method
 func (ms *MySQLStorage) Init() (*sql.DB, error) {
 	//En este metodo inicializamos las tablas de la base de datos y luego devolvemos un puntero a esa base de datos.

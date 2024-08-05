@@ -13,13 +13,15 @@ type APIServer struct {
 	//Es el resositorio que almacenara todas las conexiones a la base de datos.
 	store Store
 }
+
 //Constructor
 func NewAPIServer(addr string, store Store) *APIServer {
 	return &APIServer{addr: addr, store: store}
 }
+
 //Methods
-//Inicializa el router, registra todos los servicios y escucha al servidor.
 func (ap *APIServer) Serve() {
+	//Inicializa el router, registra todos los servicios y escucha al servidor.
 	r := mux.NewRouter()
 
 	sb := r.PathPrefix("/api/v1").Subrouter()

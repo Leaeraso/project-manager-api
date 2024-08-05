@@ -11,10 +11,12 @@ type Store interface {
 type Storage struct {
 	db *sql.DB
 }
+
 //Constructor
 func NewStore(db *sql.DB) *Storage {
 	return &Storage{db: db}
 }
+
 //Method
 func (s *Storage) CreateUser() error {
 	return nil
