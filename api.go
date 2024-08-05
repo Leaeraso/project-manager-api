@@ -11,22 +11,22 @@ import (
 type APIServer struct {
 	addr string
 	//Es el resositorio que almacenara todas las conexiones a la base de datos.
-	store *Store
+	store Store
 }
 //Constructor
-func NewAPIServer(addr string, store *Store) *APIServer {
-	return &NewAPIServer{addr: addr, store: store}
+func NewAPIServer(addr string, store Store) *APIServer {
+	return &APIServer{addr: addr, store: store}
 }
 //Methods
 //Inicializa el router, registra todos los servicios y escucha al servidor.
-func (s *APIServer) Serve() {
+func (ap *APIServer) Serve() {
 	r := mux.NewRouter()
 
 	sb := r.PathPrefix("/api/v1").Subrouter()
 
 	//registering our services
 
-	log.Println("Starting the API server at", s.addr)
+	log.Println("Starting the API server at", ap.addr)
 
-	log.Fatal(http.ListenAndServe(s.addr, sb))
+	log.Fatal(http.ListenAndServe(ap.addr, sb))
 }
