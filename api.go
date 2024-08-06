@@ -14,12 +14,12 @@ type APIServer struct {
 	store Store
 }
 
-//Constructor
+// Constructor
 func NewAPIServer(addr string, store Store) *APIServer {
 	return &APIServer{addr: addr, store: store}
 }
 
-//Methods
+// Methods
 func (ap *APIServer) Serve() {
 	//Inicializa el router, registra todos los servicios y escucha al servidor.
 	r := mux.NewRouter()
@@ -27,6 +27,8 @@ func (ap *APIServer) Serve() {
 	sb := r.PathPrefix("/api/v1").Subrouter()
 
 	//registering our services
+	tasksService := NewTasksService(ap.store)
+	tasksService.RegisterRoutes(r)
 
 	log.Println("Starting the API server at", ap.addr)
 
