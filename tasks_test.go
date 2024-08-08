@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//Vamos a testear los endpoints y ver si funcionan antes de pasarlos a produccion
+// Vamos a testear los endpoints y ver si funcionan antes de pasarlos a produccion
 func TestCreateTask(t *testing.T) {
 	//MemoryStorage
 	ms := &MockStore{}
@@ -46,8 +46,8 @@ func TestCreateTask(t *testing.T) {
 
 	t.Run("should create a task", func(t *testing.T) {
 		payload := &Task{
-			Name: "Creating a REST API in Go",
-			ProjectID: 1,
+			Name:         "Creating a REST API in Go",
+			ProjectID:    1,
 			AssignedToID: 44,
 		}
 
@@ -83,7 +83,7 @@ func TestGetTask(t *testing.T) {
 	service := NewTasksService(ms)
 
 	t.Run("should return a task", func(t *testing.T) {
-		req, err := http.NewRequest(http.MethodGet ,"/tasks/44", nil)
+		req, err := http.NewRequest(http.MethodGet, "/tasks/44", nil)
 		if err != nil {
 			t.Fatal(err)
 		}

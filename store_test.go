@@ -3,7 +3,6 @@ package main
 // Mocks
 
 type MockStore struct {
-
 }
 
 func (m *MockStore) CreateUser() error {

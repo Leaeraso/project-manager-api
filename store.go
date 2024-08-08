@@ -5,6 +5,7 @@ import "database/sql"
 type Store interface {
 	// Users
 	CreateUser() error
+	GetUserByID(id string) (*User, error)
 	// Tasks
 	CreateTask(t *Task) (*Task, error)
 	GetTask(id string) (*Task, error)
@@ -23,6 +24,13 @@ func NewStore(db *sql.DB) *Storage {
 // Method
 func (s *Storage) CreateUser() error {
 	return nil
+}
+
+func (s *Storage) GetUserByID(id string) (*User, error) {
+	var u User
+	err := s.db.QueryRow("select id, firstName, lastName, email, createdAt from users where id = ?", id).Scan(&u.ID, &u.FirstName, &u.LastName, &u.Email, &u.CreatedAt)
+
+	return &u, err
 }
 
 func (s *Storage) CreateTask(t *Task) (*Task, error) {

@@ -24,8 +24,8 @@ func NewTasksService(s Store) *TasksService {
 
 // Method
 func (ts *TasksService) RegisterRoutes(r *mux.Router) {
-	r.HandleFunc("/tasks", ts.handleCreateTask).Methods("POST")
-	r.HandleFunc("/tasks/{id}", ts.handleGetTask).Methods("GET")
+	r.HandleFunc("/tasks", WithJWTAuth(ts.handleCreateTask, ts.store)).Methods("POST")
+	r.HandleFunc("/tasks/{id}", WithJWTAuth(ts.handleGetTask, ts.store)).Methods("GET")
 }
 
 func (ts *TasksService) handleCreateTask(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +60,7 @@ func (ts *TasksService) handleCreateTask(w http.ResponseWriter, r *http.Request)
 func (ts *TasksService) handleGetTask(w http.ResponseWriter, r *http.Request) {
 	// recuperamos las variables de la http request
 	vars := mux.Vars(r)
-	// almacenamos la variable id 
+	// almacenamos la variable id
 	id := vars["id"]
 
 	t, err := ts.store.GetTask(id)
