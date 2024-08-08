@@ -63,12 +63,12 @@ func (ms *MySQLStorage) Init() (*sql.DB, error) {
 
 func (ms *MySQLStorage) createProjectsTable() error {
 	_, err := ms.db.Exec(`
-		create table is not exists projects (
+		create table if not exists projects (
 			id int unsigned not null auto_increment,
 			name varchar(255) not null,
 			createdAt timestamp not null default current_timestamp,
 
-			primary key(id),
+			primary key(id)
 		) engine=InnoDB default charset=utf8;
 	`)
 
@@ -109,7 +109,7 @@ func (ms *MySQLStorage) createUsersTable() error {
 			createdAt timestamp not null default current_timestamp,
 
 			primary key(id),
-			unique key(email),
+			unique key(email)
 		) engine=InnoDB default charset=utf8;
 	`)
 
