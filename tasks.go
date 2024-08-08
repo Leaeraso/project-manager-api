@@ -58,7 +58,18 @@ func (ts *TasksService) handleCreateTask(w http.ResponseWriter, r *http.Request)
 }
 
 func (ts *TasksService) handleGetTask(w http.ResponseWriter, r *http.Request) {
+	// recuperamos las variables de la http request
+	vars := mux.Vars(r)
+	// almacenamos la variable id 
+	id := vars["id"]
 
+	t, err := ts.store.GetTask(id)
+	if err != nil {
+		WriteJSON(w, http.StatusInternalServerError, ErrorResponse{Error: "task not found"})
+		return
+	}
+
+	WriteJSON(w, http.StatusOK, t)
 }
 
 func validateTaskPayload(task *Task) error {
