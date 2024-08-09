@@ -75,21 +75,19 @@ func (us *UserService) handleUserRegister(w http.ResponseWriter, r *http.Request
 
 func (us *UserService) handleLoginUser(w http.ResponseWriter, r *http.Request) {
 	// Traerse un usuario por email
-	vars := mux.Vars(r)
-	email := vars["email"]
-
-	u, err := us.store.GetUserByEmail(email)
-	if err != nil {
-		WriteJSON(w, http.StatusNotFound, ErrorResponse{Error: "user not found"})
-		return
-	}
-	// Comparar la contraseña con la hash password
 	var loginUser LoginUser
 	if err := json.NewDecoder(r.Body).Decode(&loginUser); err != nil {
 		WriteJSON(w, http.StatusBadRequest, ErrorResponse{Error: "invalid request"})
 		return
 	}
 
+	u, err := us.store.GetUserByEmail(loginUser.Email)
+	if err != nil {
+		WriteJSON(w, http.StatusNotFound, ErrorResponse{Error: "user not found"})
+		return
+	}
+
+	// Comparar la contraseña con la hash password
 	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(loginUser.Password)); err != nil {
 		WriteJSON(w, http.StatusUnauthorized, ErrorResponse{Error: "invalid password"})
 		return

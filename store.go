@@ -10,6 +10,8 @@ type Store interface {
 	// Tasks
 	CreateTask(t *Task) (*Task, error)
 	GetTask(id string) (*Task, error)
+	// Projects
+	CreateProject(p *Project) (*Project, error)
 }
 
 // Tendra los metodos para comunicarse con la base de datos
@@ -76,4 +78,21 @@ func (s *Storage) GetTask(id string) (*Task, error) {
 	err := s.db.QueryRow("select id, name, status, project_id, assigned_to, createdAt from tasks where id = ?", id).Scan(&t.ID, &t.Name, &t.Status, &t.ProjectID, &t.AssignedToID, &t.CreatedAt)
 
 	return &t, err
+}
+
+func (s *Storage) CreateProject(p *Project) (*Project, error) {
+	rows, err := s.db.Exec(`insert into projects (name) values 
+	(?)`, p.Name)
+	
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := rows.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	p.ID = id
+	return p, nil
 }

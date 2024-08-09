@@ -33,6 +33,9 @@ func (ap *APIServer) Serve() {
 	tasksService := NewTasksService(ap.store)
 	tasksService.RegisterRoutes(sb)
 
+	projectsService := NewProjectService(ap.store)
+	projectsService.RegisterRoutes(sb)
+
 
 	log.Println("Starting the API server at", ap.addr)
 
