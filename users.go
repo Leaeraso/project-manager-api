@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var errEmailRequired error = errors.New("email is required")
@@ -26,6 +27,7 @@ func NewUserService(s Store) *UserService {
 // Methods
 func (us *UserService) RegisterRoutes(r *mux.Router) {
 	r.HandleFunc("/users/register", us.handleUserRegister).Methods("POST")
+	r.HandleFunc("/users/login", us.handleLoginUser).Methods("POST")
 }
 
 func (us *UserService) handleUserRegister(w http.ResponseWriter, r *http.Request) {
@@ -69,6 +71,37 @@ func (us *UserService) handleUserRegister(w http.ResponseWriter, r *http.Request
 	}
 
 	WriteJSON(w, http.StatusCreated, token)	
+}
+
+func (us *UserService) handleLoginUser(w http.ResponseWriter, r *http.Request) {
+	// Traerse un usuario por email
+	vars := mux.Vars(r)
+	email := vars["email"]
+
+	u, err := us.store.GetUserByEmail(email)
+	if err != nil {
+		WriteJSON(w, http.StatusNotFound, ErrorResponse{Error: "user not found"})
+		return
+	}
+	// Comparar la contraseña con la hash password
+	var loginUser LoginUser
+	if err := json.NewDecoder(r.Body).Decode(&loginUser); err != nil {
+		WriteJSON(w, http.StatusBadRequest, ErrorResponse{Error: "invalid request"})
+		return
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(loginUser.Password)); err != nil {
+		WriteJSON(w, http.StatusUnauthorized, ErrorResponse{Error: "invalid password"})
+		return
+	}
+	// Crear un JWT y setearlo en una cookie
+	token, err := createAndSetAuthCookie(u.ID, w)
+	if err != nil {
+		WriteJSON(w, http.StatusInternalServerError, ErrorResponse{Error: "error creating session"})
+		return
+	}
+	// return la JWT como respuesta
+	WriteJSON(w, http.StatusOK, token)
 }
 
 func validateUserPayload(u *User) error {
