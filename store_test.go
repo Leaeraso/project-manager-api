@@ -32,3 +32,7 @@ func (m *MockStore) CreateProject(p *Project) (*Project, error) {
 func (m *MockStore) GetProjectById(id string) (*Project, error) {
 	return &Project{}, nil
 }
+
+func (m *MockStore) DeleteProject(id string) error {
+	return nil
+}

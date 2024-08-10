@@ -13,6 +13,7 @@ type Store interface {
 	// Projects
 	CreateProject(p *Project) (*Project, error)
 	GetProjectById(id string) (*Project, error)
+	DeleteProject(id string) error
 }
 
 // Tendra los metodos para comunicarse con la base de datos
@@ -103,4 +104,13 @@ func (s *Storage) GetProjectById(id string) (*Project, error) {
 	err := s.db.QueryRow("select id, name, createdAt from projects where id = ?", id).Scan(&p.ID, &p.Name, &p.CreatedAt)
 
 	return &p, err
+}
+
+func (s *Storage) DeleteProject(id string) error {
+	_, err := s.db.Exec("delete from projects where id = ?", id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

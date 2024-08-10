@@ -29,6 +29,7 @@ func WithJWTAuth(handlerFunc http.HandlerFunc, store Store) http.HandlerFunc {
 		}
 		// get the userID from the token
 		claims := token.Claims.(jwt.MapClaims)
+		// recuperamos el ID y lo casteamos a string
 		userID := claims["userID"].(string)
 
 		_, err = store.GetUserByID(userID)

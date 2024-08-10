@@ -71,7 +71,16 @@ func (ps *ProjectService) handleGetProject(w http.ResponseWriter, r *http.Reques
 }
 
 func (ps *ProjectService) handleDeleteProject(w http.ResponseWriter, r *http.Request) {
-	
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	err := ps.store.DeleteProject(id)
+	if err != nil {
+		WriteJSON(w, http.StatusInternalServerError, ErrorResponse{Error: "error deleting project"})
+		return
+	}
+
+	WriteJSON(w, http.StatusOK, nil)
 }
 
 func validateProjectPayload(p *Project) error {
