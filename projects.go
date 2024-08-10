@@ -58,7 +58,16 @@ func (ps *ProjectService) handleCreateProject(w http.ResponseWriter, r *http.Req
 }
 
 func (ps *ProjectService) handleGetProject(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
 
+	p, err := ps.store.GetProjectById(id)
+	if err != nil {
+		WriteJSON(w, http.StatusNotFound, ErrorResponse{Error: "project not found"})
+		return
+	}
+
+	WriteJSON(w, http.StatusOK, p)
 }
 
 func (ps *ProjectService) handleDeleteProject(w http.ResponseWriter, r *http.Request) {

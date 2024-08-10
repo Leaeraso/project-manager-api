@@ -28,3 +28,7 @@ func (m *MockStore) GetTask(id string) (*Task, error) {
 func (m *MockStore) CreateProject(p *Project) (*Project, error) {
 	return &Project{}, nil
 }
+
+func (m *MockStore) GetProjectById(id string) (*Project, error) {
+	return &Project{}, nil
+}

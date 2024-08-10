@@ -12,6 +12,7 @@ type Store interface {
 	GetTask(id string) (*Task, error)
 	// Projects
 	CreateProject(p *Project) (*Project, error)
+	GetProjectById(id string) (*Project, error)
 }
 
 // Tendra los metodos para comunicarse con la base de datos
@@ -95,4 +96,11 @@ func (s *Storage) CreateProject(p *Project) (*Project, error) {
 
 	p.ID = id
 	return p, nil
+}
+
+func (s *Storage) GetProjectById(id string) (*Project, error) {
+	var p Project
+	err := s.db.QueryRow("select id, name, createdAt from projects where id = ?", id).Scan(&p.ID, &p.Name, &p.CreatedAt)
+
+	return &p, err
 }

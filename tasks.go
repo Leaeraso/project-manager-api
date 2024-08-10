@@ -66,7 +66,7 @@ func (ts *TasksService) handleGetTask(w http.ResponseWriter, r *http.Request) {
 
 	t, err := ts.store.GetTask(id)
 	if err != nil {
-		WriteJSON(w, http.StatusInternalServerError, ErrorResponse{Error: "task not found"})
+		WriteJSON(w, http.StatusNotFound, ErrorResponse{Error: "task not found"})
 		return
 	}
 
